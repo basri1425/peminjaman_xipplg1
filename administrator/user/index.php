@@ -31,4 +31,78 @@ $result = $conn->query($sql);
             <i class="bi bi-plus-circle"></i>Tambah User
         </a>
     </div>
+    <?php if(isset($_GET['pesan'])) : ?>
+        <?php if($_GET['pesan']=='sukses') : ?>
+            <div class="alert alert-success">Data user berhasil disimpan</div>
+        <?php elseif($_GET['pesan']=='update') : ?>
+            <div class="alert alert-success">Data user berhasil diperbaharui</div>
+        <?php elseif($_GET['pesan']=='hapus') : ?>
+            <div class="alert-alert-danger">Data user berhasil  dihapus</div>
+        <?php endif; ?>
+    <?php endif; ?>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            Daftar User
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover-align-middle">
+                    <thead class="table-light">
+                        <tr class="text-center">
+                            <th width="60">No</th>
+                            <th>Nama Lengkap</th>
+                            <th>Username</th>
+                            <th width="140">Level</th>
+                            <th width="120">Status</th>
+                            <th width="120">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php  
+                        if ($result->num_rows > 0) {
+                            $no = 1;
+                            while($row = $result->fetch_assoc()) { ?>
+                            <tr>
+                                <td class="text-center"><?= $no++ ?></td>
+                                <td><?= htmlspecialchars($row['nama_lengkap']) ?></td>
+                                <td><?= htmlspecialchars($row['username']) ?></td>
+                                <td class="text-center">
+                                    <?php 
+                                        switch($row['level']){
+                                            case 'Administrator' :
+                                                echo '<span class="badge bg-danger">Administrator</span>';
+                                                break;
+                                            case 'Petugas' :
+                                                echo '<span class="badge bg-primary">Petugas</span>';
+                                                break;
+                                            default:
+                                                echo '<span class="badge bg-success">Peminjam</span>';
+                                        }
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php if($row['status']=="Aktif"){ ?>
+                                    <span class="badge bg-success">Aktif</span>
+                                    <?php }else{ ?>
+                                    <span class="badge bg-secondary">Tidak Aktif</span>
+                                    <?php } ?>
+                                </td>
+                                <td class="text-center">
+                                    <a href="detail.php?id=<?= $row['id_user'] ?>" class="btn btn-info btn-sm">Detail</a>
+                                    <a href="edit.php?id=<?= $row['id_user'] ?>" class="btn btn-warning btn-sm">edit</a>
+                                    <a href="hapus.php?id=<?= $row['id_user'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin menghapus user ini?')">hapus</a>
+                                </td>
+                            </tr>
+                            <?php
+                            }
+                        } else{ ?>
+                            <tr>
+                                <td colspan="6" class="text-center">Belum ada data user</td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
